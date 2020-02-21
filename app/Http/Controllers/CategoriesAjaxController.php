@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use App\Categories;
 use DataTables;
 use Validator;
+use DB;
 
 class CategoriesAjaxController extends Controller
 {
@@ -18,7 +19,7 @@ class CategoriesAjaxController extends Controller
     	$categories = Categories::select('id','Title', 'Keyword','Active');
     	return DataTables::of($categories)
     		->addColumn('action', function($category){
-                return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$category->id.'"><i class="glyphicon glyphicon-edit"></i> Edit</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$category->id.'"><i class="glyphicon glyphicon-remove"></i> Delete</a>';
+                return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$category->id.'"><i class="glyphicon glyphicon-edit"></i> Επεξεργασία</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$category->id.'"><i class="glyphicon glyphicon-remove"></i> Διαγραφή</a>';
             })
             ->addColumn('checkbox','<input type="checkbox" name="category_checkbox[]" class="category_checkbox" value="{{$id}}"/>')
             ->rawColumns(['checkbox','action'])
@@ -48,7 +49,7 @@ class CategoriesAjaxController extends Controller
     				'Active' => $request->get('Active')
     			]);
     			$category->save();
-    			$success_output = '<div class="alert alert-success">Category inserted succesfully.</div>';
+    			$success_output = '<div class="alert alert-success">Η κατηγορία προστέθηκε επιτυχώς.</div>';
     		}
     		if($request->get('button_action') == 'Update')
             {
@@ -57,7 +58,7 @@ class CategoriesAjaxController extends Controller
                 $categories->Keyword = $request->get('Keyword');
                 $categories->Active = $request->get('Active');
                 $categories->save();
-                $success_output = '<div class="alert alert-success">Category updated succesfully.</div>';
+                $success_output = '<div class="alert alert-success">Η κατηγορία επεξεργάσθηκε επιτυχώς.</div>';
             }
     		$output = array(
     			'error' => $error_array,
@@ -82,7 +83,7 @@ class CategoriesAjaxController extends Controller
     function removedata(Request $request){
         $category = Categories::find($request->input('id'));
         if ($category->delete()){
-            echo "Category deleted succesfully.";
+            echo "Η κατηγορία διαγράφηκε επιτυχώς.";
         }
     }
 
@@ -90,7 +91,15 @@ class CategoriesAjaxController extends Controller
         $categories_id_array = $request->input('id');
         $categories = Categories::whereIn('id',$categories_id_array);
         if ($categories->delete()){
-            echo "Categories deleted succesfully";
+            echo "Οι κατηγορίες διαγράφηκαν επιτυχώς.";
         }
+    }
+
+    function getcategories(){
+        $categorieslist = DB::table('categories')
+            ->groupBy('Title')
+            ->get();
+
+        echo json_encode($categorieslist);
     }
 }

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateCategoriesTable extends Migration
+class AddMunicipality extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,9 @@ class CreateCategoriesTable extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
-            $table->bigIncrements('id');
-            $table->string('Title', 50);
-            $table->string('Keyword',60);
-            $table->enum('Active',['Ναι','Όχι']);
-            $table->timestamps();
+        Schema::table('ads', function (Blueprint $table) {
+            //
+            $table->string('Municipality',50);
         });
     }
 
@@ -29,6 +26,8 @@ class CreateCategoriesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('categories');
+        Schema::table('ads', function (Blueprint $table) {
+            //
+        });
     }
 }

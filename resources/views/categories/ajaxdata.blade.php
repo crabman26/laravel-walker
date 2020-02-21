@@ -19,25 +19,26 @@
 <div class="container">
     <nav>
         <ul>
-            <li><a href="{{route('adsajax')}}">Ads</a></li>
-            <li><a href="{{route('categoriesajax')}}">Categories</a></li>
-            <li><a href="{{route('regionajax')}}">Regions</a></li>
+            <li><a href="{{route('adsajax')}}">Αγγελίες</a></li>
+            <li><a href="{{route('categoriesajax')}}">Κατηγορίες</a></li>
+            <li><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
+            <li><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
         </ul>
     </nav>
     <br />
-    <h3 align="center">Category processing</h3>
+    <h3 align="center">Επεξεργασία κατηγοριών</h3>
     <br />
     <div align="right">
-        <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Add new category</button>
+        <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Προσθήκη κατηγορίας</button>
     </div>
     <br />
     <table id="categories_table" class="table table-bordered" style="width:100%">
         <thead>
             <tr>
-                <th>Title</th>
+                <th>Τίτλος</th>
                 <th>Keyword</th>
-                <th>Active</th>
-                <th>Action</th>
+                <th>Ενεργή</th>
+                <th>Ενέργειες</th>
                 <th><button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></button></th>
             </tr>
         </thead>
@@ -50,29 +51,32 @@
             <form method="post" id="categories_form">
                 <div class="modal-header">
                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                   <h4 class="modal-title">Add Data</h4>
+                   <h4 class="modal-title">Προσθήκη δεδομένων</h4>
                 </div>
                 <div class="modal-body">
                     {{csrf_field()}}
                     <span id="form_output"></span>
                     <div class="form-group">
-                        <label>Enter Title:</label>
+                        <label>Τίτλος:</label>
                         <input type="text" name="Title" id="Title" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Enter Keyword:</label>
+                        <label>Keyword:</label>
                         <input type="text" name="Keyword" id="Keyword" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Enter Active:</label>
-                        <input type="text" name="Active" id="Active" class="form-control" />
+                        <label>Ενεργή:</label>
+                        <select name="Active" id="Active" class="form-control input-lg dynamic">
+                            <option>Ναι</option>
+                            <option>Όχι</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                     <input type="hidden" name="category_id" id="category_id" value="" />
                     <input type="hidden" name="button_action" id="button_action" value="insert" />
                     <input type="submit" name="submit" id="action" value="Add" class="btn btn-info" />
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
                 </div>
             </form>
         </div>
@@ -99,8 +103,8 @@ $(document).ready(function() {
         $('#categories_form')[0].reset();
         $('#form_output').html('');
         $('#button_action').val('Insert');
-        $('#action').val('Add');
-        $('.modal-title').text('Add Data');
+        $('#action').val('Προσθήκη');
+        $('.modal-title').text('Προσθήκη κατηγορίας');
     });
 
     $('#categories_form').on('submit', function(event){
@@ -126,8 +130,8 @@ $(document).ready(function() {
                 {
                     $('#form_output').html(data.success);
                     $('#categories_form')[0].reset();
-                    $('#action').val('Add');
-                    $('.modal-title').text('Add Data');
+                    $('#action').val('Εισαγωγή');
+                    $('.modal-title').text('Προσθήκη κατηγορίας');
                     $('#button_action').val('Insert');
                     $('#categories_table').DataTable().ajax.reload();
                 }
@@ -150,8 +154,8 @@ $(document).ready(function() {
                 $('#Active').val(data.Active);
                 $('#category_id').val(id);
                 $('#categoriesModal').modal('show');
-                $('#action').val('Edit');
-                $('.modal-title').text('Edit Data');
+                $('#action').val('Επεξεργασία');
+                $('.modal-title').text('Επεξεργασία κατηγορίας');
                 $('#button_action').val('Update');
             }
         })
@@ -159,7 +163,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.delete', function(){
         var id = $(this).attr('id');
-        if(confirm("Are you sure you want to delete this category?"))
+        if(confirm("Είσαι σίγουρος για την διαγραφή της κατηγορίας?"))
         {
             $.ajax({
                 url:"{{ route('categoriesajax.removedata') }}",
@@ -180,7 +184,7 @@ $(document).ready(function() {
 
     $(document).on('click','#bulk_delete',function(){
         var id = [];
-        if (confirm("Are you sure about the deletion?")){
+        if (confirm("Είσαι σίγουρος για την διαγραφή?")){
             $('.category_checkbox:checked').each(function(){
                 id.push($(this).val());
             });
@@ -194,7 +198,7 @@ $(document).ready(function() {
                 }
             });
         }else {
-
+            alert('Επιλέξτε τουλάχιστον μια κατηγορία.');
         }
     }); 
 

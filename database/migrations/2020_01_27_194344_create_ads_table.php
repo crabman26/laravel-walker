@@ -21,7 +21,7 @@ class CreateAdsTable extends Migration
             $table->string('Region',40);
             $table->string('E-mail',50);
             $table->text('Description',150);
-            $table->enum('State',['Active','Inactive']);
+            $table->enum('State',['Ενεργή','Ανενεργή']);
             $table->timestamps();
         });
     }

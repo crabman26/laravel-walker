@@ -19,29 +19,41 @@
 <div class="container">
     <nav>
         <ul>
-            <li><a href="{{route('adsajax')}}">Ads</a></li>
-            <li><a href="{{route('categoriesajax')}}">Categories</a></li>
-            <li><a href="{{route('regionajax')}}">Regions</a></li>
+            <li><a href="{{route('adsajax')}}">Αγγελίες</a></li>
+            <li><a href="{{route('categoriesajax')}}">Κατηγορίες</a></li>
+            <li><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
+            <li><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
         </ul>
     </nav>
     <br />
-    <h3 align="center">Ads processing</h3>
+    <h3 align="center">Επεξεργασία αγγελιών</h3>
     <br />
     <div align="right">
-        <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Add new ad</button>
+        <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Εισαγωγή αγγελίας</button>
+    </div>
+    <div align="left" style="width:480px;">
+        <h3 align="center">Κατηγορία:</h3>
+        <select class="form-control input-lg dynamic" id="Categories" name="Categories">
+        </select>
+        <h3 align="center">Περιφέρεια:</h3>
+        <select class="form-control input-lg dynamic" id="Regions" name="Regions">
+            <option> </option>
+        </select>
+        <h3 align="center">Δήμος:</h3>
+        <select class="form-control input-lg dynamic" id="Municipalities" name="Municipalities">
+        </select>
     </div>
     <br />
     <table id="ads_table" class="table table-bordered" style="width:100%">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Surname</th>
-                <th>Town</th>
-                <th>Region</th>
+                <th>Όνομα</th>
+                <th>Επώνυμο</th>
+                <th>Πόλη</th>
                 <th>E-mail</th>
-                <th>Description</th>
-                <th>State</th>
-                <th>Action</th>
+                <th>Περιγραφή</th>
+                <th>Κατάσταση</th>
+                <th>Ενέργειες</th>
                 <th><button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></button></th>
             </tr>
         </thead>
@@ -54,80 +66,106 @@
             <form method="post" id="ads_form">
                 <div class="modal-header">
                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                   <h4 class="modal-title">Add Data</h4>
+                   <h4 class="modal-title">Εισαγωγή δεδομένων</h4>
                 </div>
                 <div class="modal-body">
                     {{csrf_field()}}
                     <span id="form_output"></span>
                     <div class="form-group">
-                        <label>Enter Name:</label>
+                        <label>Όνομα:</label>
                         <input type="text" name="Name" id="Name" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Enter Surname:</label>
+                        <label>Επώνυμο:</label>
                         <input type="text" name="Surname" id="Surname" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Enter Town:</label>
+                        <label>Κατηγορία:</label>
+                        <select name="Category" id="Category" class="form-control input-lg dynamic" data-dependent="category"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Περιφέρεια:</label>
+                        <select name="Region" id="Region" class="form-control input-lg dynamic" data-dependent="region">
+                            <option></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Δήμος:</label>
+                        <select name="Municipality" id="Municipality" class="form-control input-lg dynamic" data-dependent="municipality"></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Πόλη:</label>
                         <input type="text" name="Town" id="Town" class="form-control" />
                     </div>
                     <div class="form-group">
-                        <label>Enter Region:</label>
-                        <select name="region" id="region" class="form-control input-lg dynamic" data-dependent="city">
-                             <option value="">Select Region</option>
-                        </select>
-                        <!-- <input type="text" name="Region" id="Region" class="form-control" /> -->
-                    </div>
-                    <div class="form-group">
-                        <label>Enter E-mail:</label>
+                        <label>E-mail:</label>
                         <input type="e-mail" name="E-mail" id="E-mail" class="form-control" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"/>
                     </div>
                     <div class="form-group">
-                        <label>Enter Description:</label>
-                        <input type="text" name="Description" id="Description" class="form-control" />
+                        <label>Περιγραφή:</label>
+                        <textarea rows = "3" cols="3" name="Description" id="Description" class="form-control"></textarea>
                     </div>
                     <div class="form-group">
-                        <label>Enter State:</label>
-                        <input type="text" name="State" id="State" class="form-control" />
+                        <label>Κατάσταση:</label>
+                        <select name="State" id="State" class="form-control input-lg dynamic">
+                            <option>Ενεργή</option>
+                            <option>Ανενεργή</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
                      <input type="hidden" name="ads_id" id="ads_id" value="" />
                     <input type="hidden" name="button_action" id="button_action" value="insert" />
                     <input type="submit" name="submit" id="action" value="Add" class="btn btn-info" />
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
 
-<script type="text/javascript">
+<script>
 $(document).ready(function() {
-     $('#ads_table').DataTable({
-        "processing": true,
-        "serverSide": true,
-        "ajax": "{{ route('adsajax.getdata') }}",
-        "columns":[
-            { "data": "Name" },
-            { "data": "Surname" },
-            { "data": "Town" },
-            { "data": "Region" },
-            { "data": "Email" },
-            { "data": "Description" },
-            { "data": "State" },
-            { "data": "action", orderable:false, searchable: false},
-            { "data": "checkbox", orderable:false, searchable: false}
-        ]
-     });
+    getCategories();
+    getRegions();
+    fetch_ads();
+    function fetch_ads(category = '',region = '',municipality = ''){
+        $('#ads_table').DataTable({
+            "processing": true,
+            "serverSide": true,
+            "ajax": {
+                url: "{{ route('adsajax.getdata') }}",
+                data: {
+                    category:category,
+                    region:region,
+                    municipality:municipality
+                }
+            },
+            "columns":[
+                { "data": "Name" },
+                { "data": "Surname" },
+                { "data": "Town" },
+                { "data": "Email" },
+                { "data": "Description" },
+                { "data": "State" },
+                { "data": "action", orderable:false, searchable: false},
+                { "data": "checkbox", orderable:false, searchable: false}
+            ]
+         });
+
+    }
+
 
     $('#add_data').click(function(){
         $('#adsModal').modal('show');
         $('#ads_form')[0].reset();
         $('#form_output').html('');
         $('#button_action').val('Insert');
-        $('#action').val('Add');
-        $('.modal-title').text('Add new ad');
+        $('#action').val('Εισαγωγή');
+        $('.modal-title').text('Προσθήκη αγγελίας');
+        getRegions();
+        getCategories();
+          
     });
 
     $('#ads_form').on('submit', function(event){
@@ -153,8 +191,8 @@ $(document).ready(function() {
                 {
                     $('#form_output').html(data.success);
                     $('#ads_form')[0].reset();
-                    $('#action').val('Add');
-                    $('.modal-title').text('Add new add');
+                    $('#action').val('Εισαγωγή');
+                    $('.modal-title').text('Προσθήκη αγγελίας');
                     $('#button_action').val('Insert');
                     $('#ads_table').DataTable().ajax.reload();
                 }
@@ -163,6 +201,9 @@ $(document).ready(function() {
     });
 
     $(document).on('click', '.edit', function(){
+        getRegions();
+        getCategories();
+        getMunicipalities();
         var id = $(this).attr("id");
         $('#form_output').html('');
         $.ajax({
@@ -174,15 +215,17 @@ $(document).ready(function() {
             {
                 $('#Name').val(data.Name);
                 $('#Surname').val(data.Surname);
+                $('#Category').val(data.catid);
                 $('#Town').val(data.Town);
+                $('#Municipality').val(data.Municipality);
                 $('#Region').val(data.Region);
                 $('#E-mail').val(data.Email);
                 $('#Description').val(data.Description);
                 $('#State').val(data.State);
                 $('#ads_id').val(id);
                 $('#adsModal').modal('show');
-                $('#action').val('Edit');
-                $('.modal-title').text('Edit Data');
+                $('#action').val('Επεξεργασία');
+                $('.modal-title').text('Επεξεργασία αγγελίας');
                 $('#button_action').val('Update');
             }
         })
@@ -190,7 +233,7 @@ $(document).ready(function() {
 
     $(document).on('click', '.delete', function(){
         var id = $(this).attr('id');
-        if(confirm("Are you sure you want to delete this ad?"))
+        if(confirm("Είσαι σίγουρος για την διαγραφή της αγγελίας?"))
         {
             $.ajax({
                 url:"{{ route('adsajax.removedata') }}",
@@ -211,7 +254,7 @@ $(document).ready(function() {
 
     $(document).on('click', '#bulk_delete', function(){
         var id = [];
-        if (confirm("Are you sure about the deletion?")){
+        if (confirm("Είσαι σίγουρος για την διαγραφη?")){
             $('.ad_checkbox:checked').each(function(){
                 id.push($(this).val());
             });
@@ -227,9 +270,87 @@ $(document).ready(function() {
                 });
             }
         } else {
-            alert("Please select at least one checkbox");
+            alert("Παρακαλούμε επιλέξτε τουλάχιστον μια αγγελία.");
         }
-    }); 
+    });
+
+    $('#Region, #Regions').on('change',function(){
+        var region = $(this).children("option:selected").val();
+        $.ajax({
+            url : "{{ route('municipalityajax.getregionmunicipality') }}",
+            method: "get",
+            data: {region},
+            dataType: "json",
+            success:function(data){
+                $('#Municipality').empty();
+                $('#Municipalities').empty();
+                for (i=0;i<data.length;i++){
+                    $('#Municipality').append($("<option></option>").text(data[i]['Name']));
+                    $('#Municipalities').append($("<option></option>").text(data[i]['Name']));
+                }
+            }
+        })
+    });
+
+    $('#Categories').on('change',function(){
+        var category = $(this).children("option:selected").val();
+        $('#ads_table').DataTable().destroy();
+        fetch_ads(category,'','');
+    });
+
+    $('#Regions').on('change',function(){
+        var region = $(this).children("option:selected").val();
+        $('#ads_table').DataTable().destroy();
+        fetch_ads('',region,'');
+    });
+
+    $('#Municipalities').on('change',function(){
+        var municipality = $(this).children("option:selected").val();
+        $('#ads_table').DataTable().destroy();
+        fetch_ads('','',municipality);
+    });
+
+
+    function getRegions(){
+        $.ajax({
+            url: "{{ route('regionajax.getregionlist') }}",
+            method: "get",
+            dataType: "json",
+            success:function(data){
+                for (i=0;i<data.length;i++){
+                    $('#Region').append($("<option></option").text(data[i]['Title']));
+                    $('#Regions').append($("<option></option").text(data[i]['Title']));
+                }
+            }
+        });
+    }
+
+    function getCategories(){
+        $.ajax({
+            url: "{{ route('categoriesajax.getcategories') }}",
+            method: "get",
+            dataType: "json",
+            success:function(data){
+                for (i=0;i<data.length;i++){
+                    $('#Category').append($("<option></option>").text(data[i]['Title']));
+                    $('#Categories').append($("<option></option>").text(data[i]['Title']));
+                }
+            }
+        });
+    }
+
+    function getMunicipalities(){
+        $.ajax({
+            url: "{{ route('municipalityajax.getmunicipalities') }}",
+            method: 'get',
+            dataType: "json",
+            success:function(data){
+                for (i=0;i<data.length;i++){
+                    $('#Municipality').append($("<option></option").text(data[i]['Name']));
+                }
+            }
+        });
+    }
 
 });
 </script>

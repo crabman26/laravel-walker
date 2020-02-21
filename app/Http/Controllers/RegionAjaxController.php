@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use DataTables;
 use App\Regions;
 use Validator;
+use DB;
 
 class RegionAjaxController extends Controller
 {
@@ -15,10 +16,10 @@ class RegionAjaxController extends Controller
     }
 
     function getdata(){
-    	$regions = Regions::select('id','Name');
+    	$regions = Regions::select('id','Title');
     	return DataTables::of($regions)
     	->addcolumn('action',function($region){
-    		 return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$region->id.'"><i class="glyphicon glyphicon-edit"></i> Edit</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$region->id.'"><i class="glyphicon glyphicon-remove"></i> Delete</a>';
+    		 return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$region->id.'"><i class="glyphicon glyphicon-edit"></i> Επεξεργασία</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$region->id.'"><i class="glyphicon glyphicon-remove"></i> Διαγραφή</a>';
     	})
     	->addcolumn('checkbox','<input type="checkbox" class="region_checkbox" value={{$id}} name="region_checkbox[]"/>')
     	->rawcolumns(['checkbox','action'])
@@ -38,15 +39,15 @@ class RegionAjaxController extends Controller
     	} else {
     		if ($request->get('button_action') == "Insert"){
 	    		$region = new Regions([
-	    			'Name' => $request->get('Name')
+	    			'Title' => $request->get('Name')
 	    		]);
 	    		$region->save();
-	    		$success_output = '<div class="alert alert-success">Region inserted succesfully.</div>';
+	    		$success_output = '<div class="alert alert-success">Η περιφέρεια προστέθηκε επιτυχώς.</div>';
     		} if ($request->get('button_action') == "Update"){
     			$region = Regions::find($request->get('region_id'));
-    			$region->Name = $request->get('Name');
+    			$region->Title = $request->get('Name');
     			$region->save();
-    			$success_output = '<div class="alert alert-success">Region updated succesfully.</div>';
+    			$success_output = '<div class="alert alert-success">Τα στοιχεία για την περιφέρεια επεξεργάσθηκαν επιτυχώς.</div>';
     		}
     	}
 
@@ -61,9 +62,9 @@ class RegionAjaxController extends Controller
     function fetchdata(Request $request){
     	$id = $request->input('id');
     	$region = Regions::find($id);
-    	$output = array([
-    		'Name' => $region->Name
-    	]);
+    	$output = array(
+    		'Name' => $region->Title
+    	);
 
     	echo json_encode($output);
     }
@@ -72,7 +73,7 @@ class RegionAjaxController extends Controller
     	$id = $request->input('id');
     	$region = Regions::find($id);
     	if ($region->delete()){
-    		echo 'Region deleted succesfully';
+    		echo 'Η περιφέρεια διαγράφηκε επιτυχώς.';
     	}
     }
 
@@ -80,7 +81,14 @@ class RegionAjaxController extends Controller
     	$region_id_array = $request->input('id');
     	$region = Regions::WhereIn('id',$region_id_array);
     	if ($region->delete()){
-    		echo 'Regions deleted succesfully';
+    		echo 'Οι περιφέρειες διαγράφηκαν επιτυχώς.';
     	}
+    }
+
+    function getregionlist(){
+        $region_list = DB::table('regions')
+         ->groupBy('Title')
+         ->get();
+        echo json_encode($region_list);
     }
 }

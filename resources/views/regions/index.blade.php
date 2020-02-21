@@ -18,22 +18,23 @@
 	<div class="container">
 		<nav>
 		    <ul>
-		        <li><a href="{{route('adsajax')}}">Ads</a></li>
-		        <li><a href="{{route('categoriesajax')}}">Categories</a></li>
-		        <li><a href="{{route('regionajax')}}">Regions</a></li>
+		        <li><a href="{{route('adsajax')}}">Αγγελίες</a></li>
+		        <li><a href="{{route('categoriesajax')}}">Κατηγορίες</a></li>
+		        <li><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
+		        <li><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
 		    </ul>
 		</nav>
 		<br />
-		<h3 align="center">Region Processing</h3>
+		<h3 align="center">Επεξεργασία περιφερειών</h3>
 		<br />
 		<div align="right">
-			<button type="button" name="add" id="add_region" class="btn btn-success btn-sm">Add Region</button>
+			<button type="button" name="add" id="add_region" class="btn btn-success btn-sm">Προσθήκη περιφέρειας</button>
 		</div>
 		<table id="regions_table" class="table table-bordered">
 			<thead>
 				<tr>
-				<th>Name</th>
-				<th>Action</th>
+				<th>Όνομα</th>
+				<th>Ενέργειες</th>
 				<th><button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></button></th>	
 				</tr>
 			</thead>
@@ -45,19 +46,19 @@
 					<form method="post" id="region_form">
 						<div class="modal-header">
 							<button type="button" class="close" data-dismiss="modal">&times;</button>
-							<h4 class="modal-title">Add Region</h4>
+							<h4 class="modal-title">Προσθήκη περιφέρειας</h4>
 						</div>
 						<div class="modal-body">
 							{{csrf_field()}}
 							<span id="form-output"></span>
 							<div class="form-group">
-								<label>Enter Name:</label>
+								<label>Όνομα:</label>
 								<input type="text" name="Name" id="Name" class="form-control"/>
 							</div>
 							<div class="modal-footer">
 								<input type="hidden" name="button_action" id="button_action" value="insert" />
 								<input type="hidden" id="region_id" name="region_id"/>
-								<input type="submit" name="submit" id="action" class="btn btn-info" value="Add"/>
+								<input type="submit" name="submit" id="action" class="btn btn-info" value="Εισαγωγή"/>
 								<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 							</div>
 						</div>
@@ -72,7 +73,7 @@
 				"serverside" : true,
 				"ajax": "{{ route('regionajax.getdata') }}",
 				"columns" : [
-					{"data" : "Name"},
+					{"data" : "Title"},
 					{"data" : "action", orderable:false, searchable: false},
 					{"data" : "checkbox", orderable:false, searchable: false},
 				]
@@ -83,9 +84,9 @@
 			$('#regionModal').modal('show');
 			$('#region_form')[0].reset();
 			$('#form-output').html('');
-			$('#action').val('Add');
+			$('#action').val('Προσθήκη');
 			$('#button_action').val('Insert');
-			$('.modal-title').text('Add new Region');
+			$('.modal-title').text('Προσθήκη περιφέρειας');
 		});
 
 		$('#region_form').on('submit',function(event){
@@ -106,9 +107,9 @@
 					} else {
 						$('#form_output').html(data.sucess);
 						$('#region_form')[0].reset();
-						$('#action').val('Add');
+						$('#action').val('Προσθήκη');
 						$('#button_action').val('Insert');
-						$('.modal-title').text('Add new Region');
+						$('.modal-title').text('Προσθήκη περιφέρειας');
 						$('#regions_table').DataTable().ajax.reload();
 					}
 				}
@@ -126,11 +127,11 @@
 		        dataType:'json',
 		        success:function(data)
 		        {
-		            $('#Name').val(data[0].Name);
+		            $('#Name').val(data.Name);
 		            $('#region_id').val(id);
 		            $('#regionModal').modal('show');
-		            $('#action').val('Edit');
-		            $('.modal-title').text('Edit Region');
+		            $('#action').val('Επεξεργασία');
+		            $('.modal-title').text('Επεξεργασία περιφέρειας');
 		            $('#button_action').val('Update');
 		        }
 		    })
@@ -138,7 +139,7 @@
 
 		$(document).on('click', '.delete', function(){
 			var id = $(this).attr("id");
-			if (confirm("Are you sure you want to delete this region?")){
+			if (confirm("Είσαι σίγουρος για την διαγραφή της περιφέρειας?")){
 				$.ajax({
 					url: "{{ route('regionajax.removedata') }}",
 					method: 'get',
@@ -155,7 +156,7 @@
 
 		$(document).on('click', '#bulk_delete', function(){
 			var id = [];
-			if (confirm("Are you sure about the deletion?")){
+			if (confirm("Είσαι σίγουρος για την διαγραφή?")){
 				$('.region_checkbox:checked').each(function(){
 					id.push($(this).val());
 				});
@@ -172,7 +173,7 @@
 
 				}
 			} else {
-				alert('Please choose at least one checkbox');
+				alert('Επιλέξτε τουλάχιστον μια περιφέρεια.');
 			}
 		});
 	</script>
