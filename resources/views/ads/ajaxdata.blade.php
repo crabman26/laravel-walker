@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Datatables Server Side Processing in Laravel</title>
+    <title>Σελίδα επεξεργασίας αγγελιών</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -31,28 +31,38 @@
     <div align="right">
         <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Εισαγωγή αγγελίας</button>
     </div>
-    <div align="left" style="width:480px;">
-        <h3 align="center">Κατηγορία:</h3>
-        <select class="form-control input-lg dynamic" id="Categories" name="Categories">
-        </select>
-        <h3 align="center">Περιφέρεια:</h3>
-        <select class="form-control input-lg dynamic" id="Regions" name="Regions">
-            <option> </option>
-        </select>
-        <h3 align="center">Δήμος:</h3>
-        <select class="form-control input-lg dynamic" id="Municipalities" name="Municipalities">
-        </select>
+    <div class="col-md-12">
+        <div class="col-md-6">
+            <h3 align="center">Κατηγορία:</h3>
+            <select class="form-control input-lg dynamic" id="Categories" name="Categories">
+                <option> </option>
+            </select>
+            <h3 align="center">Κατάσταση:</h3>
+            <input type="checkbox" name="Status" id="Active" value="Ενεργή" class="form-check-input"/>
+            <label class="form-check-label" for="Active">Ενεργή</label>
+            <input type="checkbox" name="Status" id="Inactive" value="Ανενεργή" class="form-check-input" style="margin-left:10px;"/>
+            <label class="form-check-label" for="Inactive">Ανενεργή</label>
+        </div>
+        <div class="col-md-6">
+            <h3 align="center">Περιφέρεια:</h3>
+            <select class="form-control input-lg dynamic" id="Regions" name="Regions">
+                <option> </option>
+            </select>
+            <h3 align="center">Δήμος:</h3>
+            <select class="form-control input-lg dynamic" id="Municipalities" name="Municipalities">
+            </select>
+        </div>
     </div>
     <br />
     <table id="ads_table" class="table table-bordered" style="width:100%">
         <thead>
             <tr>
+                <th>Τίτλος</th>
                 <th>Όνομα</th>
                 <th>Επώνυμο</th>
                 <th>Πόλη</th>
                 <th>E-mail</th>
                 <th>Περιγραφή</th>
-                <th>Κατάσταση</th>
                 <th>Ενέργειες</th>
                 <th><button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></button></th>
             </tr>
@@ -72,6 +82,10 @@
                     {{csrf_field()}}
                     <span id="form_output"></span>
                     <div class="form-group">
+                        <label>Τίτλος:</label>
+                        <input type="text" name="Title" id="Title" class="form-control"/>
+                    </div>
+                    <div class="form-group">
                         <label>Όνομα:</label>
                         <input type="text" name="Name" id="Name" class="form-control" />
                     </div>
@@ -81,7 +95,9 @@
                     </div>
                     <div class="form-group">
                         <label>Κατηγορία:</label>
-                        <select name="Category" id="Category" class="form-control input-lg dynamic" data-dependent="category"></select>
+                        <select name="Category" id="Category" class="form-control input-lg dynamic" data-dependent="category">
+                            <option> </option>
+                        </select>
                     </div>
                     <div class="form-group">
                         <label>Περιφέρεια:</label>
@@ -129,7 +145,7 @@ $(document).ready(function() {
     getCategories();
     getRegions();
     fetch_ads();
-    function fetch_ads(category = '',region = '',municipality = ''){
+    function fetch_ads(category = '',region = '',municipality = '',state = ''){
         $('#ads_table').DataTable({
             "processing": true,
             "serverSide": true,
@@ -138,23 +154,23 @@ $(document).ready(function() {
                 data: {
                     category:category,
                     region:region,
-                    municipality:municipality
+                    municipality:municipality,
+                    state:state,
                 }
             },
             "columns":[
+                { "data": "Header" },
                 { "data": "Name" },
                 { "data": "Surname" },
                 { "data": "Town" },
                 { "data": "Email" },
                 { "data": "Description" },
-                { "data": "State" },
                 { "data": "action", orderable:false, searchable: false},
                 { "data": "checkbox", orderable:false, searchable: false}
             ]
          });
 
     }
-
 
     $('#add_data').click(function(){
         $('#adsModal').modal('show');
@@ -163,9 +179,6 @@ $(document).ready(function() {
         $('#button_action').val('Insert');
         $('#action').val('Εισαγωγή');
         $('.modal-title').text('Προσθήκη αγγελίας');
-        getRegions();
-        getCategories();
-          
     });
 
     $('#ads_form').on('submit', function(event){
@@ -213,9 +226,10 @@ $(document).ready(function() {
             dataType:'json',
             success:function(data)
             {
+                $('#Title').val(data.Title);
                 $('#Name').val(data.Name);
                 $('#Surname').val(data.Surname);
-                $('#Category').val(data.catid);
+                $('#Category').val(data.Category);
                 $('#Town').val(data.Town);
                 $('#Municipality').val(data.Municipality);
                 $('#Region').val(data.Region);
@@ -295,21 +309,38 @@ $(document).ready(function() {
     $('#Categories').on('change',function(){
         var category = $(this).children("option:selected").val();
         $('#ads_table').DataTable().destroy();
-        fetch_ads(category,'','');
+        fetch_ads(category,'','','');
     });
 
     $('#Regions').on('change',function(){
         var region = $(this).children("option:selected").val();
         $('#ads_table').DataTable().destroy();
-        fetch_ads('',region,'');
+        fetch_ads('',region,'','');
     });
 
     $('#Municipalities').on('change',function(){
         var municipality = $(this).children("option:selected").val();
         $('#ads_table').DataTable().destroy();
-        fetch_ads('','',municipality);
+        fetch_ads('','',municipality,'');
     });
 
+    $('#Active, #Inactive').on('click',function(){
+        var category = $('#Categories').children("option:selected").val();
+        var state = $(this).val();
+        if ($(this).is(":checked")){
+            if (category != ''){
+                $("#ads_table").DataTable().destroy();
+                fetch_ads(category,'','',state);
+            } else {
+                $("#ads_table").DataTable().destroy();
+                fetch_ads('','','',state);
+            }
+        }
+    });
+
+    $('input[type="checkbox"]').on('change', function() {
+       $('input[type="checkbox"]').not(this).prop('checked', false);
+    });
 
     function getRegions(){
         $.ajax({

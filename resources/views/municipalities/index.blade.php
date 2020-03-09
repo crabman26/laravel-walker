@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Datatables Server Side Processing in Laravel</title>
+    <title>Σελίδα επεξεργασίας δήμων</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -102,7 +102,6 @@
 
         }
 
-
         $('#add_data').click(function(){
             $('#municipalitiesmodal').modal('show');
             $('#municipalities_form')[0].reset();
@@ -110,7 +109,6 @@
             $('#action').val('Προσθήκη');
             $('#button_action').val('Insert');
             $('.modal-title').text('Προσθήκη δήμου');
-             getRegions();
         });
 
         $('#municipalities_form').on('submit',function(event){
@@ -209,18 +207,18 @@
         });
 
         function getRegions(){
-        $.ajax({
-            url: "{{ route('regionajax.getregionlist') }}",
-            method:"get",
-            dataType: "json",
-            success:function(data){
-                for (i=0;i<data.length;i++){
-                    $('#Region').append($("<option></option").text(data[i]['Title']));
-                    $('#Regions').append($("<option></option").text(data[i]['Title']));
+            $.ajax({
+                url: "{{ route('regionajax.getregionlist') }}",
+                method:"get",
+                dataType: "json",
+                success:function(data){
+                    for (i=0;i<data.length;i++){
+                        $('#Region').append($("<option></option").text(data[i]['Title']));
+                        $('#Regions').append($("<option></option").text(data[i]['Title']));
+                    }
                 }
-            }
-        });
-    }
+            });
+        }
     });
 </script>
 </body>

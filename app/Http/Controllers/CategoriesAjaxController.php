@@ -15,15 +15,23 @@ class CategoriesAjaxController extends Controller
     	return view('categories.ajaxdata');
     }
 
-    function getdata(){
-    	$categories = Categories::select('id','Title', 'Keyword','Active');
-    	return DataTables::of($categories)
-    		->addColumn('action', function($category){
-                return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$category->id.'"><i class="glyphicon glyphicon-edit"></i> Επεξεργασία</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$category->id.'"><i class="glyphicon glyphicon-remove"></i> Διαγραφή</a>';
-            })
-            ->addColumn('checkbox','<input type="checkbox" name="category_checkbox[]" class="category_checkbox" value="{{$id}}"/>')
-            ->rawColumns(['checkbox','action'])
-    		->make(true);
+    function getdata(Request $request){
+        if(request()->ajax()){
+            if ($request->active){
+                $categories = DB::table('categories')
+                    ->select('id','Title', 'Keyword')
+                    ->where('Active',$request->active);
+            } else {
+    	       $categories = Categories::select('id','Title', 'Keyword');
+            }   
+        	return DataTables::of($categories)
+        		->addColumn('action', function($category){
+                    return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$category->id.'"><i class="glyphicon glyphicon-edit"></i> Επεξεργασία</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$category->id.'"><i class="glyphicon glyphicon-remove"></i> Διαγραφή</a>';
+                })
+                ->addColumn('checkbox','<input type="checkbox" name="category_checkbox[]" class="category_checkbox" value="{{$id}}"/>')
+                ->rawColumns(['checkbox','action'])
+        		->make(true);
+        }
     }
 
     function postdata(Request $request){

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Datatables Server Side Processing in Laravel</title>
+    <title>Σελίδα επεξεργασίας κατηγοριών</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
     <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
@@ -31,13 +31,19 @@
     <div align="right">
         <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Προσθήκη κατηγορίας</button>
     </div>
+    <div class="col-md-4">
+        <h3 align="center">Ενεργή</h3>
+        <input type="checkbox" name="Status" id="Active" class="form-check-input" value="Ναι"/>
+        <label for="Active" class="form-check-label">Ναι</label>
+        <input type="checkbox" name="Status" id="Inactive" class="form-check-input" style="margin-left:10px;" value="Όχι"/>
+        <label for="Inactive" class="form-check-label">Όχι</label>
+    </div>
     <br />
     <table id="categories_table" class="table table-bordered" style="width:100%">
         <thead>
             <tr>
                 <th>Τίτλος</th>
                 <th>Keyword</th>
-                <th>Ενεργή</th>
                 <th>Ενέργειες</th>
                 <th><button type="button" name="bulk_delete" id="bulk_delete" class="btn btn-danger btn-xs"><i class="glyphicon glyphicon-remove"></i></button></th>
             </tr>
@@ -85,18 +91,26 @@
 
 <script type="text/javascript">
 $(document).ready(function() {
+    fetch_categories();
+    function fetch_categories(active = ''){
+
      $('#categories_table').DataTable({
         "processing": true,
         "serverSide": true,
-        "ajax": "{{ route('categoriesajax.getdata') }}",
+        "ajax": {
+            url: "{{ route('categoriesajax.getdata') }}",
+            data: {
+                active:active
+            }
+        },
         "columns":[
             { "data": "Title" },
             { "data": "Keyword" },
-            { "data": "Active" },
             { "data": "action", orderable:false, searchable: false},
             { "data": "checkbox", orderable:false, searchable: false}
         ]
      });
+    }
 
     $('#add_data').click(function(){
         $('#categoriesModal').modal('show');
@@ -200,6 +214,18 @@ $(document).ready(function() {
         }else {
             alert('Επιλέξτε τουλάχιστον μια κατηγορία.');
         }
+    });
+
+    $('#Active, #Inactive').on('click',function(){
+        if ($(this).is(':checked')){
+            var active = $(this).val();
+            $("#categories_table").DataTable().destroy();
+            fetch_categories(active);
+        }
+    });
+
+    $('input[type="checkbox"]').on('change', function() {
+       $('input[type="checkbox"]').not(this).prop('checked', false);
     }); 
 
 });

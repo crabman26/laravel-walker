@@ -18,22 +18,34 @@ class AdsAjaxController extends Controller
     function getdata(Request $request){
         if (request()->ajax()){
             if ($request->category){
-                $ads = DB::table('ads')
-                    ->join('categories','categories.id','=','ads.catid')
-                    ->select('ads.id','categories.Title','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description','ads.State')
-                    ->where('categories.Title',$request->category);
+                if ($request->state){
+                    $ads = DB::table('ads')
+                        ->join('categories','categories.id','=','ads.catid')
+                        ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+                        ->where('categories.Title',$request->category)
+                        ->where('State',$request->state);
+                } else {
+                    $ads = DB::table('ads')
+                        ->join('categories','categories.id','=','ads.catid')
+                        ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+                        ->where('categories.Title',$request->category);
+                }
             } else if ($request->region){
                 $ads = DB::table('ads')
-                    ->select('ads.id','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description','ads.State')
+                    ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
                     ->where('Region',$request->region);
             }else if ($request->municipality){
                 $ads = DB::table('ads')
-                    ->select('ads.id','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description','ads.State')
+                    ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
                     ->where('Municipality',$request->municipality);
+            }else if($request->state){
+                $ads = DB::table('ads')
+                    ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+                    ->where('State',$request->state);
             }else {
                 $ads = DB::table('ads')
                     ->join('categories','categories.id','=','ads.catid')
-                    ->select('ads.id','categories.Title','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description','ads.State');
+                    ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description','ads.State');
             }
     	return DataTables::of($ads)
             ->addColumn('action', function($ad){
@@ -47,7 +59,8 @@ class AdsAjaxController extends Controller
 
     function postdata(Request $request){
     	$validation = Validator::make($request->all(),[
-    		'Name' => 'required',
+    		'Title' => 'required',
+            'Name' => 'required',
     		'Surname' => 'required',
             'Category' => 'required',
     		'Town' => 'required',
@@ -70,7 +83,8 @@ class AdsAjaxController extends Controller
             if($request->get('button_action') == "Insert"){
     			$ad = new Ads([
                     'catid' => $category,
-    				'Name' => $request->get('Name'),
+    				'Header' => $request->get('Title'),
+                    'Name' => $request->get('Name'),
     				'Surname' => $request->get('Surname'),
     				'Town' => $request->get('Town'),
                     'Municipality' => $request->get('Municipality'),
@@ -86,6 +100,7 @@ class AdsAjaxController extends Controller
             {
                 $ad = Ads::find($request->get('ads_id'));
                 $ad->catid = $category;
+                $ad->Header = $request->get('Title');
                 $ad->Name = $request->get('Name');
                 $ad->Surname = $request->get('Surname');
                 $ad->Town = $request->get('Town');
@@ -112,6 +127,7 @@ class AdsAjaxController extends Controller
         $title = DB::table('categories')
             ->where('id',$ad->catid)->value('Title');
         $output = array(
+            'Title'    =>  $ad->Header,
             'Name'    =>  $ad->Name,
             'Surname'     =>  $ad->Surname,
             'Category'     =>  $title,
@@ -140,6 +156,7 @@ class AdsAjaxController extends Controller
             echo 'Οι αγγελίες διαγράφηκαν επιτυχώς.';
         } 
     }
+
 
 
 }
