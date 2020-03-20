@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Ads;
+use App\Ad;
 use DataTables;
 use Validator;
 use DB;
@@ -14,6 +14,18 @@ class AdsAjaxController extends Controller
     function index(){
         return view('ads.ajaxdata');
     }
+
+    function adslist(Request $request){
+        $ads = DB::table('ads')
+           ->join('categories','categories.id','=','ads.catid')
+            ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+            ->where('categories.Title',$request->category)
+           ->get();
+
+        return view('main.ads',compact('ads'));
+    }
+
+
 
     function getdata(Request $request){
         if (request()->ajax()){
@@ -81,7 +93,7 @@ class AdsAjaxController extends Controller
             $category = DB::table('categories')
                 ->where('Title',$title)->value('id');
             if($request->get('button_action') == "Insert"){
-    			$ad = new Ads([
+    			$ad = new Ad([
                     'catid' => $category,
     				'Header' => $request->get('Title'),
                     'Name' => $request->get('Name'),
@@ -98,7 +110,7 @@ class AdsAjaxController extends Controller
     		}
             if($request->get('button_action') == 'Update')
             {
-                $ad = Ads::find($request->get('ads_id'));
+                $ad = Ad::find($request->get('ads_id'));
                 $ad->catid = $category;
                 $ad->Header = $request->get('Title');
                 $ad->Name = $request->get('Name');
@@ -123,7 +135,7 @@ class AdsAjaxController extends Controller
     function fetchdata(Request $request)
     {
         $id = $request->input('id');
-        $ad = Ads::find($id);
+        $ad = Ad::find($id);
         $title = DB::table('categories')
             ->where('id',$ad->catid)->value('Title');
         $output = array(
@@ -143,7 +155,7 @@ class AdsAjaxController extends Controller
 
     function removedata(Request $request){
         $id = $request->input('id');
-        $ad = Ads::find($id);
+        $ad = Ad::find($id);
         if ($ad->delete()){
             echo 'Η αγγελία διαγράφηκε επιτυχώς.';
         }
@@ -151,7 +163,7 @@ class AdsAjaxController extends Controller
 
     function massremove(Request $request){
         $ads_id_array = $request->input('id');
-        $ad = Ads::whereIn('id', $ads_id_array);
+        $ad = Ad::whereIn('id', $ads_id_array);
         if ($ad->delete()){
             echo 'Οι αγγελίες διαγράφηκαν επιτυχώς.';
         } 

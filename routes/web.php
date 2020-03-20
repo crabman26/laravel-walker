@@ -15,8 +15,25 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('ads','AdsController');
-Route::resource('categories','CategoriesController');
+//Handle basic page request
+Route::get('index','CategoriesAjaxController@categories');
+Route::get('ads/{category}','AdsAjaxController@adslist')->name('ads');
+Route::get('about','MainController@about')->name('about');
+Route::get('contact','MainController@contact')->name('contact');
+Route::get('terms','MainController@terms')->name('terms');
+Route::get('login','MainController@login')->name('login');
+
+//Handle login request
+Route::post('/main/checklogin', 'MainController@checklogin');
+Route::get('main/successlogin', 'MainController@successlogin');
+Route::get('main/logout', 'MainController@logout');
+
+//Handle register request
+Route::get('/register', 'EmailAvailable@index');
+Route::post('/register/check', 'EmailAvailable@check')->name('register.check');
+
+//Handle contact form request
+Route::resource('contacts', 'ContactController');
 
 //Ajax implementation
 Route::get('adsajax','AdsAjaxController@index')->name('adsajax');

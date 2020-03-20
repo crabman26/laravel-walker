@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Municipalities;
+use App\Municipaly;
 use Validator;
 use DB;
 use DataTables;
@@ -54,7 +54,7 @@ class MunicipalityAjaxController extends Controller
             $title = $request->get('Region');
             $regionid = DB::table('regions')->where('Title',$title)->value('id');
     		if ($request->get('button_action') == "Insert"){
-	    		$municipalities = new Municipalities([
+	    		$municipalities = new Municipality([
                     'regionid' => $regionid,
 	    			'Name' => $request->get('Name'),
 	    		]);
@@ -63,7 +63,7 @@ class MunicipalityAjaxController extends Controller
     		}
 
     		if ($request->get('button_action') == "Update"){
-    			$municipality = Municipalities::find($request->get('municipality_id'));
+    			$municipality = Municipality::find($request->get('municipality_id'));
                 $municipality->regionid = $regionid;
     			$municipality->name = $request->get('Name');
     			$municipality->save();
@@ -80,7 +80,7 @@ class MunicipalityAjaxController extends Controller
     
     function fetchdata(Request $request){
     	$id = $request->input('id');
-    	$municipality = Municipalities::find($id);
+    	$municipality = Municipality::find($id);
         $title = DB::table('regions')->where('id',$municipality->regionid)->value('Title');
     	$output = array(
             'Region' => $title,
@@ -91,7 +91,7 @@ class MunicipalityAjaxController extends Controller
 
     function removedata(Request $request){
     	$id = $request->input('id');
-    	$municipality = Municipalities::find($id);
+    	$municipality = Municipality::find($id);
     	if ($municipality->delete()){
     		echo 'Ο δήμος διεγράφη επιτυχώς.';
     	}
@@ -99,7 +99,7 @@ class MunicipalityAjaxController extends Controller
 
     function massremove(Request $request){
     	$municipality_id_array = $request->input('id');
-    	$municipalities = Municipalities::WhereIn('id',$municipality_id_array);
+    	$municipalities = Municipality::WhereIn('id',$municipality_id_array);
     	if ($municipalities->delete()){
     		echo 'Οι δήμοι διεγράφησαν επιτυχώς.';
     	} 

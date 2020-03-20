@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use DataTables;
-use App\Regions;
+use App\Region;
 use Validator;
 use DB;
 
@@ -16,7 +16,7 @@ class RegionAjaxController extends Controller
     }
 
     function getdata(){
-    	$regions = Regions::select('id','Title');
+    	$regions = Region::select('id','Title');
     	return DataTables::of($regions)
     	->addcolumn('action',function($region){
     		 return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$region->id.'"><i class="glyphicon glyphicon-edit"></i> Επεξεργασία</a><a href="#" class="btn btn-xs btn-danger delete" id="'.$region->id.'"><i class="glyphicon glyphicon-remove"></i> Διαγραφή</a>';
@@ -38,13 +38,13 @@ class RegionAjaxController extends Controller
     		}
     	} else {
     		if ($request->get('button_action') == "Insert"){
-	    		$region = new Regions([
+	    		$region = new Region([
 	    			'Title' => $request->get('Name')
 	    		]);
 	    		$region->save();
 	    		$success_output = '<div class="alert alert-success">Η περιφέρεια προστέθηκε επιτυχώς.</div>';
     		} if ($request->get('button_action') == "Update"){
-    			$region = Regions::find($request->get('region_id'));
+    			$region = Region::find($request->get('region_id'));
     			$region->Title = $request->get('Name');
     			$region->save();
     			$success_output = '<div class="alert alert-success">Τα στοιχεία για την περιφέρεια επεξεργάσθηκαν επιτυχώς.</div>';
@@ -61,7 +61,7 @@ class RegionAjaxController extends Controller
 
     function fetchdata(Request $request){
     	$id = $request->input('id');
-    	$region = Regions::find($id);
+    	$region = Region::find($id);
     	$output = array(
     		'Name' => $region->Title
     	);
@@ -71,7 +71,7 @@ class RegionAjaxController extends Controller
 
     function removedata(Request $request){
     	$id = $request->input('id');
-    	$region = Regions::find($id);
+    	$region = Region::find($id);
     	if ($region->delete()){
     		echo 'Η περιφέρεια διαγράφηκε επιτυχώς.';
     	}
@@ -79,7 +79,7 @@ class RegionAjaxController extends Controller
 
     function massremove(Request $request){
     	$region_id_array = $request->input('id');
-    	$region = Regions::WhereIn('id',$region_id_array);
+    	$region = Region::WhereIn('id',$region_id_array);
     	if ($region->delete()){
     		echo 'Οι περιφέρειες διαγράφηκαν επιτυχώς.';
     	}

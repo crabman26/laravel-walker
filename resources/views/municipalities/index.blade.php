@@ -1,31 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Σελίδα επεξεργασίας δήμων</title>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
-    <script src="https://cdn.datatables.net/1.10.12/js/jquery.dataTables.min.js"></script>
-    <script src="https://cdn.datatables.net/1.10.12/js/dataTables.bootstrap.min.js"></script>       
-    <link rel="stylesheet" href="https://cdn.datatables.net/1.10.12/css/dataTables.bootstrap.min.css" />
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
-    <style>
-        nav ul li{
-            display: inline-block;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-     <nav>
-         <ul>
-             <li><a href="{{route('adsajax')}}">Αγγελίες</a></li>
-             <li><a href="{{route('categoriesajax')}}">Κατηγορίες</a></li>
-             <li><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
-             <li><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
-         </ul>
-     </nav>
-     <br />   
-     <h3 align="center">Επεξεργασία Δήμων</h3>
+@extends('master')
+@section('content')
+    <br />   
+    <h3 align="center">Επεξεργασία Δήμων</h3>
      <br />
      <div align="right">
          <button type="button" class="btn btn-success btn-sm" id="add_data" name="add">Εισαγωγή δήμου</button>
@@ -221,5 +197,4 @@
         }
     });
 </script>
-</body>
-</html>
+@endsection

@@ -3,7 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Categories;
+use App\Category;
 use DataTables;
 use Validator;
 use DB;
@@ -15,6 +15,13 @@ class CategoriesAjaxController extends Controller
     	return view('categories.ajaxdata');
     }
 
+    function categories(){
+        $categories = DB::table('categories')
+                    ->orderByRaw('title ASC')
+                    ->get();
+        return view('main.index',compact('categories'));
+    }
+
     function getdata(Request $request){
         if(request()->ajax()){
             if ($request->active){
@@ -22,7 +29,7 @@ class CategoriesAjaxController extends Controller
                     ->select('id','Title', 'Keyword')
                     ->where('Active',$request->active);
             } else {
-    	       $categories = Categories::select('id','Title', 'Keyword');
+    	       $categories = Category::select('id','Title', 'Keyword');
             }   
         	return DataTables::of($categories)
         		->addColumn('action', function($category){
@@ -51,7 +58,7 @@ class CategoriesAjaxController extends Controller
             }
     	} else {
     		if($request->get('button_action') == "Insert"){
-    			$category = new Categories([
+    			$category = new Category([
     				'Title' => $request->get('Title'),
     				'Keyword' => $request->get('Keyword'),
     				'Active' => $request->get('Active')
@@ -61,7 +68,7 @@ class CategoriesAjaxController extends Controller
     		}
     		if($request->get('button_action') == 'Update')
             {
-                $categories = Categories::find($request->get('category_id'));
+                $categories = Category::find($request->get('category_id'));
                 $categories->Title = $request->get('Title');
                 $categories->Keyword = $request->get('Keyword');
                 $categories->Active = $request->get('Active');
@@ -79,7 +86,7 @@ class CategoriesAjaxController extends Controller
     function fetchdata(Request $request)
     {
         $id = $request->input('id');
-        $category = Categories::find($id);
+        $category = Category::find($id);
         $output = array(
             'Title'    =>  $category->Title,
             'Keyword'     =>  $category->Keyword,
@@ -89,7 +96,7 @@ class CategoriesAjaxController extends Controller
     }
 
     function removedata(Request $request){
-        $category = Categories::find($request->input('id'));
+        $category = Category::find($request->input('id'));
         if ($category->delete()){
             echo "Η κατηγορία διαγράφηκε επιτυχώς.";
         }
@@ -97,7 +104,7 @@ class CategoriesAjaxController extends Controller
 
     function massremove(Request $request){
         $categories_id_array = $request->input('id');
-        $categories = Categories::whereIn('id',$categories_id_array);
+        $categories = Category::whereIn('id',$categories_id_array);
         if ($categories->delete()){
             echo "Οι κατηγορίες διαγράφηκαν επιτυχώς.";
         }
@@ -110,4 +117,5 @@ class CategoriesAjaxController extends Controller
 
         echo json_encode($categorieslist);
     }
+
 }

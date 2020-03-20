@@ -1,0 +1,52 @@
+body {
+	background-color: #FFE4E1;
+}
+
+
+header ul li, footer ul li, nav ul li {
+    		display: inline;
+    	}
+
+#navbar-header, #navbar-footer, #admin-nav {
+	height: 40px;
+	padding: 8px 0px;
+}
+
+#navbar-header {
+	background-color: #C71585;
+}
+
+#navbar-footer {
+	background-color: #DB7093;
+}
+
+#admin-nav {
+	background-color: #FF4500;
+}
+
+.main-link {
+	padding-right: 40px;
+}
+
+.main-link a, .last-link a {
+	text-decoration: none;
+	color: #fff;
+}
+
+.main-link a:hover,.last-link a:hover {
+	color: #337ab7;
+}
+
+.last-link a {
+	float: right;
+	margin-right: 10px;
+}
+
+
+main {
+	padding: 10px 0px;
+}
+
+p {
+	text-align: justify;
+}
