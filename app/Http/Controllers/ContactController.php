@@ -5,111 +5,60 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\Contact;
+use DB;
+use Mail;
 
 class ContactController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function index()
-    {
-        //
-         $contacts = Contact::all()->toArray();
-        return view('contactform.index',compact('contacts'));
+    //
+
+    public function viewcontacts(){
+    	$contacts = Contact::all()->toArray();
+    	return view('contactform.index',compact('contacts'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
-    public function store(Request $request)
-    {
-        //
-        $validation = Validator::make($request->all(),
-        [
-            'Name' => 'required',
-            'Surname' => 'required',
-            'E-mail' => 'required',
-            'Phone' => 'required',
-            'Message' => 'required'
+    public function savecontact(Request $request){
+    	$this->validate($request, [
+            'Name' => 'required|max:30',
+    		'Surname' => 'required|max:30',
+    		'E-mail' => 'required|email|max:40',
+    		'Phone' => 'required|numeric|max:10',
+    		'Message' => 'required',
         ]);
+        $contact = new Contact([
+    			'Name' => $request->get('Name'),
+    			'Surname' => $request->get('Surname'),
+    			'E-mail' => $request->get('E-mail'),
+    			'Phone' => $request->get('Phone'),
+    			'Message' => $request->get('Message'),
+    		]);
+    		$contact->save();
+    		$success_output = "Η επικοινωνία πραγματοποιήθηκε επιτυχώς. Θα επικοινωνήσουμε σύντομα μαζί σας.";
+    		return redirect()->route('contact')->with('success',$success_output);
 
-        $error_array = array();
-        $success_output = '';
-        if ($validation->fails()){
-            foreach ($validation->messages()->getMessages() as $field_name => $message){
-                $error_array[] = $message; 
-            }
-        } else {
-            $contact = new Contact([
-                'Name' => $request->get('Name'),
-                'Surname' => $request->get('Surname'),
-                'E-mail' => $request->get('E-mail'),
-                'Phone' => $request->get('Phone'),
-                'Message' => $request->get('Message'),
-            ]);
-            $contact->save();
-            $success_output = 'Η επικοινωνία πραγματοποιήθηκε επιτυχώς, θα επικοινωνήσουμε σύντομα μαζί σας.';
-            return redirect()->route('contact')->with('success',$success_output);
-        }
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+    public function replyform(Request $request){
+    	$mail = DB::Table('contacts')->select('E-mail as Mail')->where('id',$request->Id)->get();
+    	return view('contactform.reply',compact('mail'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function edit($id)
-    {
-        //
+    public function replymail(Request $request){
+    	$email = $request->get('email');
+    	$this->validate($request,[
+    		'Reply' => 'required',
+    	]);
+
+    	Mail::send('ads.ajaxdata',
+    	array('Message' => $request->get('Reply')
+    	), 
+    	function($message){
+    		$message->from('info@walker.gr');
+    		$message->to('saquib.rizwan@cloudways.com')->subject('Απάντηση σε αίτημα επικοινωνίας walker.gr');
+    	});
+
+    	return redirect()->route('contactform')->with('success','Το e-mail στάλθηκε επιτυχώς.');
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, $id)
-    {
-        //
-    }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy($id)
-    {
-        //
-    }
 }

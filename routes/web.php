@@ -33,7 +33,10 @@ Route::get('/register', 'EmailAvailable@index');
 Route::post('/register/check', 'EmailAvailable@check')->name('register.check');
 
 //Handle contact form request
-Route::resource('contacts', 'ContactController');
+Route::post('/contact/savecontact','ContactController@savecontact');
+Route::get('/contactform','ContactController@viewcontacts');
+Route::get('/contact/replyform/{Id}','ContactController@replyform');
+Route::post('/contact/replymail/{Mail}','ContactController@replymail');
 
 //Ajax implementation
 Route::get('adsajax','AdsAjaxController@index')->name('adsajax');
@@ -67,4 +70,5 @@ Route::get('municipalityajax/removedata','MunicipalityAjaxController@removedata'
 Route::get('municipalityajax/massremove','MunicipalityAjaxController@massremove')->name('municipalityajax.massremove');
 Route::get('municipalityajax/getmunicipalities','MunicipalityAjaxController@getmunicipalities')->name('municipalityajax.getmunicipalities');
 Route::get('municipalityajax/getregionmunicipality','MunicipalityAjaxController@getregionmunicipality')->name('municipalityajax.getregionmunicipality');
+
 
