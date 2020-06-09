@@ -19,6 +19,7 @@ class CategoriesAjaxController extends Controller
         $categories = DB::table('categories')
                     ->orderByRaw('title ASC')
                     ->get();
+       
         return view('main.index',compact('categories'));
     }
 
@@ -116,6 +117,22 @@ class CategoriesAjaxController extends Controller
             ->get();
 
         echo json_encode($categorieslist);
+    }
+
+    function fetchkeywords(Request $request){
+        if ($request->get('query')){
+            $query = $request->get('query');
+            $data = DB::table('categories')
+                  ->where('Keyword','LIKE',"%{$query}%")
+                  ->get();
+            $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+            foreach($data as $row){
+                $output .= '
+                 <li><a href="#">'.$row->Title.'</a></li>';
+            }
+            $output .= '</ul>';
+            echo $output;
+        }
     }
 
 }

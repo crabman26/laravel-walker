@@ -16,11 +16,19 @@ class AdsAjaxController extends Controller
     }
 
     function adslist(Request $request){
-        $ads = DB::table('ads')
-           ->join('categories','categories.id','=','ads.catid')
-            ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
-            ->where('categories.Title',$request->category)
-           ->get();
+        if ($request->category){
+            $ads = DB::table('ads')
+               ->join('categories','categories.id','=','ads.catid')
+                ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+                ->where('categories.Title',$request->category)
+               ->get();
+
+           } else if ($request->area){
+                $ads = DB::table('ads')
+                ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+                ->where('Municipality',$request->area)
+               ->get();
+           }
 
         return view('main.ads',compact('ads'));
     }

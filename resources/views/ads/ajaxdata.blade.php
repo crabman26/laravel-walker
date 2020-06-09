@@ -4,7 +4,7 @@
     <h3 align="center">Επεξεργασία αγγελιών</h3>
     <br />
     <div align="right">
-        <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Εισαγωγή αγγελίας</button>
+        <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Προσθήκη αγγελίας</button>
     </div>
     <div class="col-md-12">
         <div class="col-md-6">

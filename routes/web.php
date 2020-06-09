@@ -18,6 +18,7 @@ Route::get('/', function () {
 //Handle basic page request
 Route::get('index','CategoriesAjaxController@categories');
 Route::get('ads/{category}','AdsAjaxController@adslist')->name('ads');
+Route::get('ads/{area}','AdsAjaxController@adslist')->name('ads');
 Route::get('about','MainController@about')->name('about');
 Route::get('contact','MainController@contact')->name('contact');
 Route::get('terms','MainController@terms')->name('terms');
@@ -53,6 +54,7 @@ Route::get('categoriesajax/fetchdata','CategoriesAjaxController@fetchdata')->nam
 Route::get('categoriesajax/removedata','CategoriesAjaxController@removedata')->name('categoriesajax.removedata');
 Route::get('categoriesajax/massremove','CategoriesAjaxController@massremove')->name('categoriesajax.massremove');
 Route::get('categoriesajax/getcategories','CategoriesAjaxController@getcategories')->name('categoriesajax.getcategories');
+Route::post('categoriesajax/fetchkeywords', 'CategoriesAjaxController@fetchkeywords')->name('categoriesajax.fetchkeywords');
 
 Route::get('regionajax','RegionAjaxController@index')->name('regionajax');
 Route::get('regionajax/getdata','RegionAjaxController@getdata')->name('regionajax.getdata');
@@ -70,5 +72,11 @@ Route::get('municipalityajax/removedata','MunicipalityAjaxController@removedata'
 Route::get('municipalityajax/massremove','MunicipalityAjaxController@massremove')->name('municipalityajax.massremove');
 Route::get('municipalityajax/getmunicipalities','MunicipalityAjaxController@getmunicipalities')->name('municipalityajax.getmunicipalities');
 Route::get('municipalityajax/getregionmunicipality','MunicipalityAjaxController@getregionmunicipality')->name('municipalityajax.getregionmunicipality');
+Route::post('municipalityajax/fetchmunicipalities', 'MunicipalityAjaxController@fetchmunicipalities')->name('municipalityajax.fetchmunicipalities');
 
 
+
+
+Auth::routes(['verify' => true]); 
+
+Route::get('/home', 'HomeController@index')->name('home');

@@ -120,4 +120,20 @@ class MunicipalityAjaxController extends Controller
         echo json_encode($municipalities);
 
     }
+
+    function fetchmunicipalities(Request $request){
+        if ($request->get('area')){
+            $area = $request->get('area');
+            $data = DB::table('municipalities')
+                  ->where('Name','LIKE',"%{$area}%")
+                  ->get();
+            $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+            foreach($data as $row){
+                $output .= '
+                 <li><a href="#">'.$row->Name.'</a></li>';
+            }
+            $output .= '</ul>';
+            echo $output;
+        }
+    }
 }

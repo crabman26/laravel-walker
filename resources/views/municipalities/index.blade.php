@@ -4,7 +4,7 @@
     <h3 align="center">Επεξεργασία Δήμων</h3>
      <br />
      <div align="right">
-         <button type="button" class="btn btn-success btn-sm" id="add_data" name="add">Εισαγωγή δήμου</button>
+         <button type="button" class="btn btn-success btn-sm" id="add_data" name="add">Προσθήκη δήμου</button>
      </div>
      <br/>
      <table id="municipalitiestable" class="table table-bordered">

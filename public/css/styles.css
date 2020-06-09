@@ -16,6 +16,13 @@ header ul li, footer ul li, nav ul li {
 	background-color: #C71585;
 }
 
+#usernav-header {
+	width: 180px;
+	margin-top: 60px;
+	float: right;
+}
+
+
 #navbar-footer {
 	background-color: #DB7093;
 }
@@ -28,12 +35,15 @@ header ul li, footer ul li, nav ul li {
 	padding-right: 40px;
 }
 
-.main-link a, .last-link a {
+#usernav-header a, .main-link a, .last-link a {
 	text-decoration: none;
+}
+
+.main-link a, .last-link a {
 	color: #fff;
 }
 
-.main-link a:hover,.last-link a:hover {
+#usernav-header a:hover, .main-link a:hover,.last-link a:hover {
 	color: #337ab7;
 }
 
@@ -49,4 +59,9 @@ main {
 
 p {
 	text-align: justify;
+}
+
+#keyword-search {
+	float: right;
+	width: 35%;
 }
