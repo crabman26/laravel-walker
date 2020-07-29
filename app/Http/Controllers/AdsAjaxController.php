@@ -16,24 +16,24 @@ class AdsAjaxController extends Controller
     }
 
     function adslist(Request $request){
-        if ($request->category){
+        $keyword = $request->keyword;
+        if (substr($keyword, 0,10) == 'Δήμος'){
+            $ads = DB::table('ads')
+                ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+                ->where('Municipality',$request->keyword)
+                ->get();
+
+        } else {
             $ads = DB::table('ads')
                ->join('categories','categories.id','=','ads.catid')
                 ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
-                ->where('categories.Title',$request->category)
+                ->where('categories.Title',$request->keyword)
                ->get();
 
-           } else if ($request->area){
-                $ads = DB::table('ads')
-                ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
-                ->where('Municipality',$request->area)
-               ->get();
-           }
-
+        }
+    
         return view('main.ads',compact('ads'));
     }
-
-
 
     function getdata(Request $request){
         if (request()->ajax()){
@@ -62,6 +62,10 @@ class AdsAjaxController extends Controller
                 $ads = DB::table('ads')
                     ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
                     ->where('State',$request->state);
+            }else if($request->usermail){
+                $ads = DB::table('ads')
+                    ->select('ads.id','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
+                    ->where('User_Mail',$request->usermail);
             }else {
                 $ads = DB::table('ads')
                     ->join('categories','categories.id','=','ads.catid')
@@ -103,7 +107,8 @@ class AdsAjaxController extends Controller
             if($request->get('button_action') == "Insert"){
     			$ad = new Ad([
                     'catid' => $category,
-    				'Header' => $request->get('Title'),
+    				'User_Mail' => $request->get('User_Mail'),
+                    'Header' => $request->get('Title'),
                     'Name' => $request->get('Name'),
     				'Surname' => $request->get('Surname'),
     				'Town' => $request->get('Town'),
@@ -176,7 +181,4 @@ class AdsAjaxController extends Controller
             echo 'Οι αγγελίες διαγράφηκαν επιτυχώς.';
         } 
     }
-
-
-
 }

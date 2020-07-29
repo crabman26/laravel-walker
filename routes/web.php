@@ -17,8 +17,7 @@ Route::get('/', function () {
 
 //Handle basic page request
 Route::get('index','CategoriesAjaxController@categories');
-Route::get('ads/{category}','AdsAjaxController@adslist')->name('ads');
-Route::get('ads/{area}','AdsAjaxController@adslist')->name('ads');
+Route::get('ads/{keyword}','AdsAjaxController@adslist')->name('ads');
 Route::get('about','MainController@about')->name('about');
 Route::get('contact','MainController@contact')->name('contact');
 Route::get('terms','MainController@terms')->name('terms');
@@ -74,8 +73,16 @@ Route::get('municipalityajax/getmunicipalities','MunicipalityAjaxController@getm
 Route::get('municipalityajax/getregionmunicipality','MunicipalityAjaxController@getregionmunicipality')->name('municipalityajax.getregionmunicipality');
 Route::post('municipalityajax/fetchmunicipalities', 'MunicipalityAjaxController@fetchmunicipalities')->name('municipalityajax.fetchmunicipalities');
 
+Route::get('usersajax','UserAjaxController@index')->name('usersajax');
+Route::get('usersajax/getdata','UserAjaxController@getdata')->name('usersajax.getdata');
+Route::post('usersajax/postdata','UserAjaxController@postdata')->name('usersajax.postdata');
+Route::get('usersajax/fetchdata','UserAjaxController@fetchdata')->name('usersajax.fetchdata');
+Route::get('usersajax/removedata','UserAjaxController@removedata')->name('usersajax.removedata');
+Route::get('usersajax/massremove','UserAjaxController@massremove')->name('usersajax.massremove');
 
-
+Route::get('memberads','MainController@memberads')->name('memberads');
+Route::get('memberprofile','MainController@memberprofile')->name('memberprofile');
+Route::get('usersajax/memberdata','UserAjaxController@memberdata')->name('usersajax.memberdata');
 
 Auth::routes(['verify' => true]); 
 

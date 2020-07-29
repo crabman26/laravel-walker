@@ -25,37 +25,41 @@ class MainController extends Controller
     	return view('main.login');
     }
 
-    function checklogin(Request $request)
-        {
-         $this->validate($request, [
+    function memberads(){
+        return view('member.memberads');
+    }
+
+    function memberprofile(){
+        return view('member.memberprofile');
+    }
+
+    function checklogin(Request $request){
+        $this->validate($request, [
           'email'   => 'required|email',
           'password'  => 'required|alphaNum|min:3'
-         ]);
+        ]);
 
-         $user_data = array(
+        $user_data = array(
           'email'  => $request->get('email'),
           'password' => $request->get('password')
-         );
+        );
 
-         if(Auth::attempt($user_data))
+        if(Auth::attempt($user_data))
          {
           return redirect('main/successlogin');
-         }
-         else
+         } else
          {
           return back()->with('error', 'Wrong Login Details');
          }
 
-        }
+    }
 
-        function successlogin()
-        {
-         return view('ads.ajaxdata');
-        }
+    function successlogin(){
+        return view('ads.ajaxdata');
+    }
 
-        function logout()
-        {
-         Auth::logout();
-         return redirect('index');
-        }
+    function logout(){
+        Auth::logout();
+        return redirect('index');
+    }
 }

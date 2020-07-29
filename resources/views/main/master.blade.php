@@ -15,7 +15,6 @@
 <div class="container">
    <div class="row">
        <div class="col-md-12">
-
            <header>
                 <a href="{{ url('index') }}"><img src="<?php echo asset('images/logo.png')?>" alt="logo"/></a>
                <nav id="usernav-header">
@@ -33,7 +32,6 @@
                </nav>
            </header>
            <main>
-          
                 @yield('content')
            </main>
            <footer>
@@ -83,25 +81,20 @@ $(document).ready(function(){
       }
   });
 
-  $(document).on('click', 'li', function(){  
+  $(document).on('click', '#categories-list', function(){  
         var keyword = $(this).text();
         $('#keyword_name').val($(this).text());  
         $('#KeywordList').fadeOut();
         location.href = 'ads/'+keyword;
     });
 
-  // $(document).on('click','li',function(){
-  //     var area = $(this).text();
-  //     $('#area_name').val($(this).text());
-  //     $('#AreaList').fadeOut();
-  //     location.href = 'ads/'+area;
-
-  // });
-
-
-});
-
- 
+  $(document).on('click','#municipalities-list',function(){
+      var area = $(this).text();
+      $('#area_name').val($(this).text());
+      $('#AreaList').fadeOut();
+      location.href = 'ads/'+area;
+  });
+}); 
 </script>
 </body>
 </html>

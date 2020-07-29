@@ -127,10 +127,10 @@ class MunicipalityAjaxController extends Controller
             $data = DB::table('municipalities')
                   ->where('Name','LIKE',"%{$area}%")
                   ->get();
-            $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+            $output = '<ul class="dropdown-menu" id="dropdown-list">';
             foreach($data as $row){
                 $output .= '
-                 <li><a href="#">'.$row->Name.'</a></li>';
+                 <li id="municipalities-list" class="list-group-item"><a href="#">'.$row->Name.'</a></li>';
             }
             $output .= '</ul>';
             echo $output;

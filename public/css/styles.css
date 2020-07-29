@@ -2,10 +2,17 @@ body {
 	background-color: #FFE4E1;
 }
 
-
 header ul li, footer ul li, nav ul li {
     		display: inline;
-    	}
+}
+
+main {
+	padding: 10px 0px;
+}
+
+p {
+	text-align: justify;
+}
 
 #navbar-header, #navbar-footer, #admin-nav {
 	height: 40px;
@@ -21,7 +28,6 @@ header ul li, footer ul li, nav ul li {
 	margin-top: 60px;
 	float: right;
 }
-
 
 #navbar-footer {
 	background-color: #DB7093;
@@ -52,16 +58,14 @@ header ul li, footer ul li, nav ul li {
 	margin-right: 10px;
 }
 
-
-main {
-	padding: 10px 0px;
-}
-
-p {
-	text-align: justify;
-}
-
 #keyword-search {
 	float: right;
 	width: 35%;
+}
+
+#dropdown-list {
+	display:block; 
+	top:70%; 
+	left:15px; 
+	min-width:415px;
 }

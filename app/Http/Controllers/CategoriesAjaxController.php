@@ -125,10 +125,10 @@ class CategoriesAjaxController extends Controller
             $data = DB::table('categories')
                   ->where('Keyword','LIKE',"%{$query}%")
                   ->get();
-            $output = '<ul class="dropdown-menu" style="display:block; position:relative">';
+            $output = '<ul class="dropdown-menu" id="dropdown-list">';
             foreach($data as $row){
                 $output .= '
-                 <li><a href="#">'.$row->Title.'</a></li>';
+                 <li id="categories-list" class="list-group-item"><a href="#">'.$row->Title.'</a></li>';
             }
             $output .= '</ul>';
             echo $output;

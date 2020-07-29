@@ -21,16 +21,25 @@
            <header>
                <nav id="admin-nav">
                    <ul>
-                       <li class="main-link"><a href="{{route('adsajax')}}">Αγγελίες</a></li>
-                       <li class="main-link"><a href="{{route('categoriesajax')}}">Κατηγορίες</a></li>
-                       <li class="main-link"><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
-                       <li class="main-link"><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
-                       <li class="main-link"><a href="{{url('contactform')}}">Φόρμες Επικοινωνίας</a></li>
-                        @if(isset(Auth::user()->email))
-                           <li class="last-link"><a href="{{ url('/main/logout') }}">Αποσύνδεση</a></li>
-                         @else
-                          <script>window.location = "/main";</script>
-                         @endif
+                      @php
+                        $role = Auth::user()->Role;
+                      @endphp
+                      @if($role == 'Administrator')
+                        <li class="main-link"><a href="{{route('adsajax')}}">Αγγελίες</a></li>
+                        <li class="main-link"><a href="{{route('categoriesajax')}}">Κατηγορίες</a></li>
+                        <li class="main-link"><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
+                        <li class="main-link"><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
+                        <li class="main-link"><a href="{{route('usersajax')}}">Χρήστες</a></li>
+                        <li class="main-link"><a href="{{url('contactform')}}">Φόρμες Επικοινωνίας</a></li>
+                      @elseif($role == 'Member')
+                        <li class="main-link"><a href="{{route('memberads')}}">Αγγελίες</a></li>
+                        <li class="main-link"><a href="{{route('memberprofile')}}">Προφίλ</a></li>
+                      @endif
+                      @if(isset(Auth::user()->email))
+                         <li class="last-link" data-email="{{ Auth::user()->email }}"><a href="{{ url('/main/logout') }}">Αποσύνδεση</a></li>
+                      @else
+                        <script>window.location = "/main";</script>
+                      @endif
                    </ul>
                </nav>
            </header>

@@ -6,28 +6,6 @@
     <div align="right">
         <button type="button" name="add" id="add_data" class="btn btn-success btn-sm">Προσθήκη αγγελίας</button>
     </div>
-    <div class="col-md-12">
-        <div class="col-md-6">
-            <h3 align="center">Κατηγορία:</h3>
-            <select class="form-control input-lg dynamic" id="Categories" name="Categories">
-                <option> </option>
-            </select>
-            <h3 align="center">Κατάσταση:</h3>
-            <input type="checkbox" name="Status" id="Active" value="Ενεργή" class="form-check-input"/>
-            <label class="form-check-label" for="Active">Ενεργή</label>
-            <input type="checkbox" name="Status" id="Inactive" value="Ανενεργή" class="form-check-input" style="margin-left:10px;"/>
-            <label class="form-check-label" for="Inactive">Ανενεργή</label>
-        </div>
-        <div class="col-md-6">
-            <h3 align="center">Περιφέρεια:</h3>
-            <select class="form-control input-lg dynamic" id="Regions" name="Regions">
-                <option> </option>
-            </select>
-            <h3 align="center">Δήμος:</h3>
-            <select class="form-control input-lg dynamic" id="Municipalities" name="Municipalities">
-            </select>
-        </div>
-    </div>
     <br />
     <table id="ads_table" class="table table-bordered" style="width:100%">
         <thead>
@@ -56,6 +34,9 @@
                 <div class="modal-body">
                     {{csrf_field()}}
                     <span id="form_output"></span>
+                    <div class="form-group">
+                        <input type="hidden" name="User_Mail" id="User_Mail" class="form-control"/>
+                    </div>
                     <div class="form-group">
                         <label>Τίτλος:</label>
                         <input type="text" name="Title" id="Title" class="form-control"/>
@@ -117,20 +98,18 @@
 
 <script>
 $(document).ready(function() {
+    var mail = $('.last-link').attr('data-email');
     getCategories();
     getRegions();
-    fetch_ads();
-    function fetch_ads(category = '',region = '',municipality = '',state = ''){
+    fetch_ads(mail);
+    function fetch_ads(usermail){
         $('#ads_table').DataTable({
             "processing": true,
             "serverSide": true,
             "ajax": {
                 url: "{{ route('adsajax.getdata') }}",
                 data: {
-                    category:category,
-                    region:region,
-                    municipality:municipality,
-                    state:state,
+                    usermail:usermail,
                 }
             },
             "columns":[
@@ -148,6 +127,8 @@ $(document).ready(function() {
     }
 
     $('#add_data').click(function(){
+        var mail = $('.last-link').attr('data-email');
+        $('#User_Mail').val(mail);
         $('#adsModal').modal('show');
         $('#ads_form')[0].reset();
         $('#form_output').html('');
@@ -281,23 +262,6 @@ $(document).ready(function() {
         })
     });
 
-    $('#Categories').on('change',function(){
-        var category = $(this).children("option:selected").val();
-        $('#ads_table').DataTable().destroy();
-        fetch_ads(category,'','','');
-    });
-
-    $('#Regions').on('change',function(){
-        var region = $(this).children("option:selected").val();
-        $('#ads_table').DataTable().destroy();
-        fetch_ads('',region,'','');
-    });
-
-    $('#Municipalities').on('change',function(){
-        var municipality = $(this).children("option:selected").val();
-        $('#ads_table').DataTable().destroy();
-        fetch_ads('','',municipality,'');
-    });
 
     $('#Active, #Inactive').on('click',function(){
         var category = $('#Categories').children("option:selected").val();
@@ -325,7 +289,6 @@ $(document).ready(function() {
             success:function(data){
                 for (i=0;i<data.length;i++){
                     $('#Region').append($("<option></option").text(data[i]['Title']));
-                    $('#Regions').append($("<option></option").text(data[i]['Title']));
                 }
             }
         });
@@ -339,7 +302,6 @@ $(document).ready(function() {
             success:function(data){
                 for (i=0;i<data.length;i++){
                     $('#Category').append($("<option></option>").text(data[i]['Title']));
-                    $('#Categories').append($("<option></option>").text(data[i]['Title']));
                 }
             }
         });
