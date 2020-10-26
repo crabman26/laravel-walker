@@ -64,7 +64,7 @@ class UserAjaxController extends Controller
 	    			'name' => $request->get('Name'),
 	    			'email' => $request->get('E-mail'),
 	    			'password' => Hash::make($request->get('Password')),
-	    			'Role' => $request->get('Password')
+	    			'Role' => $request->get('Role')
 	    		]);
 	    		$user->save();
 	    		$success_output = '<div class="alert alert-success>Ο χρήστης προστέθηκε επιτυχώς.</div>';

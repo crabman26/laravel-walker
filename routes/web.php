@@ -87,3 +87,5 @@ Route::get('usersajax/memberdata','UserAjaxController@memberdata')->name('usersa
 Auth::routes(['verify' => true]); 
 
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/stats', 'GoogleGraphController@index')->name('home');

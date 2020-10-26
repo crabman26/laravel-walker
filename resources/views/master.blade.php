@@ -30,7 +30,8 @@
                         <li class="main-link"><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
                         <li class="main-link"><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
                         <li class="main-link"><a href="{{route('usersajax')}}">Χρήστες</a></li>
-                        <li class="main-link"><a href="{{url('contactform')}}">Φόρμες Επικοινωνίας</a></li>
+                        <li class="main-link"><a href="{{url('contactform')}}">Φόρμες επικοινωνίας</a></li>
+                        <li class="main-link"><a href="{{url('stats')}}">Στατιστικά στοιχεία</a></li>
                       @elseif($role == 'Member')
                         <li class="main-link"><a href="{{route('memberads')}}">Αγγελίες</a></li>
                         <li class="main-link"><a href="{{route('memberprofile')}}">Προφίλ</a></li>

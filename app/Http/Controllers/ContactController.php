@@ -12,12 +12,12 @@ class ContactController extends Controller
 {
     //
 
-    public function viewcontacts(){
+    function viewcontacts(){
     	$contacts = Contact::all()->toArray();
     	return view('contactform.index',compact('contacts'));
     }
 
-    public function savecontact(Request $request){
+    function savecontact(Request $request){
     	$this->validate($request, [
             'Name' => 'required|max:30',
     		'Surname' => 'required|max:30',
@@ -26,24 +26,24 @@ class ContactController extends Controller
     		'Message' => 'required',
         ]);
         $contact = new Contact([
-    			'Name' => $request->get('Name'),
-    			'Surname' => $request->get('Surname'),
-    			'E-mail' => $request->get('E-mail'),
-    			'Phone' => $request->get('Phone'),
-    			'Message' => $request->get('Message'),
-    		]);
-    		$contact->save();
-    		$success_output = "Η επικοινωνία πραγματοποιήθηκε επιτυχώς. Θα επικοινωνήσουμε σύντομα μαζί σας.";
-    		return redirect()->route('contact')->with('success',$success_output);
+    		'Name' => $request->get('Name'),
+    		'Surname' => $request->get('Surname'),
+    		'E-mail' => $request->get('E-mail'),
+    		'Phone' => $request->get('Phone'),
+    		'Message' => $request->get('Message'),
+    	]);
+    	$contact->save();
+    	$success_output = "Η επικοινωνία πραγματοποιήθηκε επιτυχώς. Θα επικοινωνήσουμε σύντομα μαζί σας.";
+    	return redirect()->route('contact')->with('success',$success_output);
 
     }
 
-    public function replyform(Request $request){
+    function replyform(Request $request){
     	$mail = DB::Table('contacts')->select('E-mail as Mail')->where('id',$request->Id)->get();
     	return view('contactform.reply',compact('mail'));
     }
 
-    public function replymail(Request $request){
+    function replymail(Request $request){
     	$email = $request->get('email');
     	$this->validate($request,[
     		'Reply' => 'required',
