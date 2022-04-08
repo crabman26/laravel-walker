@@ -25,7 +25,7 @@
                        <li class="main-link"><a href="{{route('categoriesajax')}}">Κατηγορίες</a></li>
                        <li class="main-link"><a href="{{route('regionajax')}}">Περιφέρειες</a></li>
                        <li class="main-link"><a href="{{route('municipalityajax')}}">Δήμοι</a></li>
-                       <li class="main-link"><a href="{{url('contactform')}}">Φόρμες Επικοινωνίας</a></li>
+                       <li class="main-link"><a href="{{route('contacts')}}">Φόρμες Επικοινωνίας</a></li>
                         @if(isset(Auth::user()->email))
                            <li class="last-link"><a href="{{ url('/main/logout') }}">Αποσύνδεση</a></li>
                          @else

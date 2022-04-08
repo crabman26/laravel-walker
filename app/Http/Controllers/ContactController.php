@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Validator;
 use App\Contact;
+use App\Mail\ContactAnswer;
 
 class ContactController extends Controller
 {
@@ -61,6 +62,7 @@ class ContactController extends Controller
                 'E-mail' => $request->get('E-mail'),
                 'Phone' => $request->get('Phone'),
                 'Message' => $request->get('Message'),
+                'Answer' => 'No'
             ]);
             $contact->save();
             $success_output = 'Η επικοινωνία πραγματοποιήθηκε επιτυχώς, θα επικοινωνήσουμε σύντομα μαζί σας.';
@@ -111,5 +113,27 @@ class ContactController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function answer(Request $request) {
+        $validation = Validator::make($request->all(),[
+            'Text' => 'required',
+        ]);
+        $error_array = array();
+        $success_output = '';
+         if ($validation->fails()) {
+            foreach($validation->messages()->getMessages() as $field_name => $messages){
+                $error_array[] = $messages;
+            }
+        } else {
+            $text = $request->get('Text');
+            Mail::to($request->user())->send(new ContactAnswer($text));
+            $success_output = '<div class="alert alert-success">Η απάντηση στάλθηκε επιτυχώς.</div>';
+            $output = array(
+                'error' => $error_array,
+                'success' => $success_output
+            );
+            echo json_encode($output);
+        }
     }
 }

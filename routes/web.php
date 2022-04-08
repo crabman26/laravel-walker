@@ -68,3 +68,7 @@ Route::get('municipalityajax/massremove','MunicipalityAjaxController@massremove'
 Route::get('municipalityajax/getmunicipalities','MunicipalityAjaxController@getmunicipalities')->name('municipalityajax.getmunicipalities');
 Route::get('municipalityajax/getregionmunicipality','MunicipalityAjaxController@getregionmunicipality')->name('municipalityajax.getregionmunicipality');
 
+Route::get('contacts','ContactController@index')->name('contacts');
+
+Route::post('contactanswer','ContactController@answer')->name('contact.answer');
+
