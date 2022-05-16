@@ -20,7 +20,7 @@ class AdsAjaxController extends Controller
            ->join('categories','categories.id','=','ads.catid')
             ->select('ads.id','categories.Title','ads.Header','ads.Name','ads.Surname','ads.Town','ads.Email','ads.Description')
             ->where('categories.Title',$request->category)
-           ->get();
+           ->paginate(15);
 
         return view('main.ads',compact('ads'));
     }

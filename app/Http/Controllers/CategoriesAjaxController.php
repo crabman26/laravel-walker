@@ -18,7 +18,7 @@ class CategoriesAjaxController extends Controller
     function categories(){
         $categories = DB::table('categories')
                     ->orderByRaw('title ASC')
-                    ->get();
+                    ->paginate(15);
         return view('main.index',compact('categories'));
     }
 
@@ -116,6 +116,22 @@ class CategoriesAjaxController extends Controller
             ->get();
 
         echo json_encode($categorieslist);
+    }
+
+    function fetchresult(Request $request){
+        $query = $request->get('query');
+        $categories = DB::table('categories')
+            ->where('Title','LIKE',"%{$query}%")
+            ->get();
+        $output = '<ul class="dropdown-menu">';
+          foreach($categories as $row)
+          {
+           $output .= '
+           <li><a href="#" class="search-result">'.$row->Title.'</a></li>
+           ';
+          }
+          $output .= '</ul>';
+          echo $output;
     }
 
 }

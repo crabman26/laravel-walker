@@ -50,6 +50,7 @@ Route::get('categoriesajax/fetchdata','CategoriesAjaxController@fetchdata')->nam
 Route::get('categoriesajax/removedata','CategoriesAjaxController@removedata')->name('categoriesajax.removedata');
 Route::get('categoriesajax/massremove','CategoriesAjaxController@massremove')->name('categoriesajax.massremove');
 Route::get('categoriesajax/getcategories','CategoriesAjaxController@getcategories')->name('categoriesajax.getcategories');
+Route::post('categoriesajax/fetchresult','CategoriesAjaxController@fetchresult')->name('categoriesajax.fetchresult');
 
 Route::get('regionajax','RegionAjaxController@index')->name('regionajax');
 Route::get('regionajax/getdata','RegionAjaxController@getdata')->name('regionajax.getdata');
@@ -68,7 +69,9 @@ Route::get('municipalityajax/massremove','MunicipalityAjaxController@massremove'
 Route::get('municipalityajax/getmunicipalities','MunicipalityAjaxController@getmunicipalities')->name('municipalityajax.getmunicipalities');
 Route::get('municipalityajax/getregionmunicipality','MunicipalityAjaxController@getregionmunicipality')->name('municipalityajax.getregionmunicipality');
 
-Route::get('contacts','ContactController@index')->name('contacts');
+//Handle contact requests
+Route::get('contact','ContactController@index')->name('contacts');
+Route::get('contact/getdata','ContactController@getdata')->name('contact.getdata');
+Route::post('contact/answer','ContactController@answer')->name('contact.answer');
 
-Route::post('contactanswer','ContactController@answer')->name('contact.answer');
 

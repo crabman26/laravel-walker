@@ -23,21 +23,23 @@
     </div>
    @endif
 
-   <form method="post" action="{{ url('/main/checklogin') }}">
-    {{ csrf_field() }}
-    <div class="form-group">
-     <label>Email:</label>
-     <input type="email" name="email" class="form-control" />
-    </div>
-    <div class="form-group">
-     <label>Κωδικός:</label>
-     <input type="password" name="password" class="form-control" />
-    </div>
-    <div class="form-group">
-     <input type="submit" name="login" class="btn btn-primary" value="Είσοδος" />
-     <input type="reset" name="reset" class="btn btn-warning" value="Επαναφορά" />
-     <a href="{{ url('register') }}">Δημιουργία λογαριασμού</a>
-    </div>
-   </form>
+   <div class="col-md-6">
+      <form method="post" action="{{ url('/main/checklogin') }}">
+       {{ csrf_field() }}
+       <div class="form-group">
+        <label>E-mail:</label>
+        <input type="email" name="email" class="form-control" />
+       </div>
+       <div class="form-group">
+        <label>Κωδικός:</label>
+        <input type="password" name="password" class="form-control" />
+       </div>
+       <div class="form-group">
+        <input type="submit" name="login" class="btn btn-primary" value="Είσοδος" />
+        <input type="reset" name="reset" class="btn btn-warning" value="Επαναφορά" />
+       </div>
+        <a href="{{ url('register') }}">Δημιουργία λογαριασμού</a>
+      </form>
+   </div>
   </div>
 @endsection

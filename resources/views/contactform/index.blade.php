@@ -1,9 +1,8 @@
 @extends('master')
 @section('content')
-<table class="table table-bordered">
+<table class="table table-bordered" id="contacts_table">
 	<thead>
 		<tr>
-			<th>Id</th>
 			<th>Όνομα</th>
 			<th>Επώνυμο</th>
 			<th>E-mail</th>
@@ -12,18 +11,7 @@
 			<th>Απάντηση</th>
 			<th>Ενέργειες</th>
 		</tr>
-		@foreach($contacts as $contact)
-			<tr>
-				<td class="cid">{{$contact['id']}}</td>
-				<td>{{$contact['Name']}}</td>
-				<td>{{$contact['Surname']}}</td>
-				<td>{{$contact['E-mail']}}</td>
-				<td>{{$contact['Phone']}}</td>
-				<td>{{$contact['Message']}}</td>
-				<td>{{$contact['Answer']}}</td>
-				<td><button type="button" class="btn btn-primary">Απάντηση</button></td>
-			</tr>
-		@endforeach
+		
 	</thead>
 </table>
 <div id="answerModal" class="modal fade" role="dialog">
@@ -47,8 +35,7 @@
                 </div>
                 <div class="modal-footer">
    					<input type="hidden" name="contact_id" id="contact_id" value="" />
-                    <input type="hidden" name="button_action" id="button_action" value="answer" />
-                    <input type="submit" name="submit" id="action" value="Add" class="btn btn-info" />
+                    <input type="submit" name="submit" id="action" value="Αποστολή" class="btn btn-info" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
                 </div>
             </form>
@@ -56,22 +43,52 @@
     </div>
 </div>
 <script>
-	$('button').click(function(){
+	$(document).ready(function(){
+		fetch_contacts();
+
+		function fetch_contacts(){
+			$("#contacts_table").DataTable({
+				"processing": true,
+				"serverSide": true,
+				"ajax": {
+					url: "{{ route('contact.getdata')}}",
+
+				},
+				"columns":[
+					{"data": "Name"},
+					{"data": "Surname"},
+					{"data": "E-mail"},
+					{"data": "Phone"},
+					{"data": "Message"},
+					{"data": "Answer"},
+					{ "data": "action", orderable:false, searchable: false},
+
+				]
+			})
+		}
+	});
+	$(document).on('click','.edit',function(){
+		var id = $(this).attr("id");
 		$('#answerModal').modal('show');
         $('#answer_form')[0].reset();
-        $('#contact_id').val()
         $('#form_output').html('');
-        $('#button_action').val('Answer');
-        $('#action').val('Απάντηση');
+        $('#contact_id').val(id);
         $('.modal-title').text('Απάντηση επικοινωνίας');
 	});
 	$('#answer_form').on('submit',function(e){
 		e.preventDefault();
 		var answer_data = $(this).serialize();
+		console.log(answer_data);
+		var id = $('#contact_id').val();
+		var _token = $('input[name="_token"]').val();
 		$.ajax({
 			url: "{{ route('contact.answer') }}",
 			method: "POST",
-			data: answer_data,
+			data: {
+				answer_data: answer_data,
+				id : id,
+				_token: _token,
+			},
 			dataType: "json",
 			success:function(data){
 				if(data.error.length > 0)

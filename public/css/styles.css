@@ -2,10 +2,21 @@ body {
 	background-color: #FFE4E1;
 }
 
-
 header ul li, footer ul li, nav ul li {
     		display: inline;
     	}
+
+main {
+	padding: 10px 0px;
+}
+
+p {
+	text-align: justify;
+}
+
+a {
+	text-decoration: none !important;
+}
 
 #navbar-header, #navbar-footer, #admin-nav {
 	height: 40px;
@@ -22,6 +33,24 @@ header ul li, footer ul li, nav ul li {
 
 #admin-nav {
 	background-color: #FF4500;
+}
+
+#searchbar {
+	float: right;
+}
+
+#result {
+	display: none;
+}
+
+#Municipalities {
+	margin-bottom: 10px;
+}
+
+.dropdown-menu {
+	display:block; 
+	position:relative; 
+	width:100%;
 }
 
 .main-link {
@@ -42,11 +71,9 @@ header ul li, footer ul li, nav ul li {
 	margin-right: 10px;
 }
 
-
-main {
-	padding: 10px 0px;
+.search-result {
+	padding-left: 10px;
 }
 
-p {
-	text-align: justify;
-}
+
+

@@ -13,7 +13,8 @@
 				<td>{{$ad->Town}}</td>
 				<td>{{$ad->Description}}</td>
 			</tr>
-			@endforeach	
+		@endforeach	
 			
 	</table>
+	{{ $ads->links() }}
 @endsection

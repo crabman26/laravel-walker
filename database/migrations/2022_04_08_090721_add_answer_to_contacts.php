@@ -14,7 +14,7 @@ class AddAnswerToContacts extends Migration
     public function up()
     {
         Schema::table('contacts', function (Blueprint $table) {
-            $table->enum('Answer',['Υes','Νo']);
+            $table->enum('Answer',['Υes','Νo'])->default('No');;
             //
         });
     }

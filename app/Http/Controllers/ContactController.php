@@ -4,8 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Validator;
+use DataTables;
 use App\Contact;
 use App\Mail\ContactAnswer;
+use DB;
 
 class ContactController extends Controller
 {
@@ -17,8 +19,23 @@ class ContactController extends Controller
     public function index()
     {
         //
-         $contacts = Contact::all()->toArray();
-        return view('contactform.index',compact('contacts'));
+         
+        return view('contactform.index');
+    }
+
+    public function getdata(Request $request){
+        if (request()->ajax()){
+            $contacts = DB::table('contacts')
+                ->select('contacts.id','contacts.Name','contacts.Surname','contacts.E-mail','contacts.Phone','contacts.Message','contacts.Answer');
+
+            return DataTables::of($contacts)
+                ->addColumn('action',function($contact){
+                    return '<a href="#" class="btn btn-xs btn-primary edit" id="'.$contact->id.'"><i class="glyphicon glyphicon-edit"></i> Απάντηση</a>';
+                })
+                    ->rawColumns(['action'])
+                    ->make(true);
+        }
+
     }
 
     /**
@@ -133,6 +150,9 @@ class ContactController extends Controller
                 'error' => $error_array,
                 'success' => $success_output
             );
+            $contact = Contact::find($request->get('contact_id'));
+            $contact->Answer = 'Yes';
+            $contact->save();
             echo json_encode($output);
         }
     }

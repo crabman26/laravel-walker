@@ -15,7 +15,6 @@
 <div class="container">
    <div class="row">
        <div class="col-md-12">
-
            <header>
                 <a href="{{ url('index') }}"><img src="<?php echo asset('images/logo.png')?>" alt="logo"/></a>
                <nav id="navbar-header">

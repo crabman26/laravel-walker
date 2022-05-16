@@ -105,7 +105,7 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                     <input type="hidden" name="ads_id" id="ads_id" value="" />
+                    <input type="hidden" name="ads_id" id="ads_id" value="" />
                     <input type="hidden" name="button_action" id="button_action" value="insert" />
                     <input type="submit" name="submit" id="action" value="Add" class="btn btn-info" />
                     <button type="button" class="btn btn-default" data-dismiss="modal">Κλείσιμο</button>
